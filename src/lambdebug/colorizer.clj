@@ -14,7 +14,7 @@
   [line]
     (remove #(= "" %)
       (string/partition #"#\{|[\(\)\{\}\[\]]|[, ]+" line)))
-    
+
 (defn finish-string
   "Return the part until a quote and the rest"
   [s]
@@ -42,7 +42,8 @@
           (if (= "\"" sep)
             (let [[string rest] (finish-string after)]
               (if rest
-                (concat start [(str "\"" string "\"")] (tokenize-line rest false))
+                (concat start [(str "\"" string "\"")]
+                        (tokenize-line rest false))
                 (concat start [sep+after :cont])))
             (concat start [sep+after])))
         (tokenize-simple-line line))))
@@ -131,11 +132,15 @@
                 (whitespace? token)
                   (recur path (conj before token) (next found) after)
                 (open-block? token)
-                  (let [[till-open-block focus from-close-block] (token-trim found)
-                        [skip start-found] (split-at-block n (next (butlast focus)))
+                  (let [[till-open-block focus from-close-block]
+                        (token-trim found)
+                        [skip start-found]
+                        (split-at-block n (next (butlast focus)))
                         [found after-found] (split-at-block 1 start-found)
-                        before (concat before till-open-block (first focus) skip)
-                        after (concat after-found (last focus) from-close-block after)]
+                        before (concat before till-open-block
+                                       (first focus) skip)
+                        after (concat after-found (last focus)
+                                      from-close-block after)]
                     (recur (next path) before found after))
                 :else
                   [before found after]))

@@ -1,7 +1,7 @@
 (ns
   lambdebug.coverage
   (:use
-    [lambdebug 
+    [lambdebug
       [core :only [trace-defn]]
       [utils :only [var-source-form resolve-tree]]]
     [clojure

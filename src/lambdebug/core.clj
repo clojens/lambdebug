@@ -4,7 +4,7 @@
   (:require
     [clojure
       [string :as s]])
-  (:use 
+  (:use
     [clojure
       test pprint repl]
     [clojure.java
@@ -16,13 +16,13 @@
       utils])
   (:import [java.util.Date]))
 
-(def *level* 0)
-(def *function* nil)
-(def *path* [])
-(def *trace-enabled* nil)
+(def ^:dynamic *level* 0)
+(def ^:dynamic *function* nil)
+(def ^:dynamic *path* [])
+(def ^:dynamic *trace-enabled* nil)
 
-(def *traces* (agent nil))
-(def *function-forms* (agent {}))
+(def ^:dynamic *traces* (agent nil))
+(def ^:dynamic *function-forms* (agent {}))
 
 (defmacro enter-function
   [name ns form]
@@ -67,8 +67,8 @@
 
 (defn trace-set*
   [path form ns]
-  `(tr ~path ~form 
-      ~(set 
+  `(tr ~path ~form
+      ~(set
           (for [item (indexed (set-seq form))]
              (trace-form [(first item)] (second item) ns)))))
 
@@ -114,7 +114,7 @@
 
 
 (defn trace-fn
-  "Trace fn in both forms, 
+  "Trace fn in both forms,
     (fn [x] ...), or (fn ([x] ..) ([x y] ..))"
   ([path form ns] (trace-fn path form nil ns))
   ([path form name ns]
@@ -154,7 +154,7 @@
   [sym]
   (.endsWith (str sym) "."))
 
-(defn trace-form 
+(defn trace-form
   ([form ns] (trace-form nil form ns))
   ([path form ns]
   (cond
@@ -209,8 +209,8 @@
           ns (:ns md)]
       (when-let [form (var-source-form func-var)]
         (when (#{'defn 'defn-} (first form))
-          (send *function-forms* 
-            assoc 
+          (send *function-forms*
+            assoc
             (ns-resolve ns (second form))
             (nth (macroexpand-1 form) 2))
           (try
@@ -219,7 +219,7 @@
               (intern ns (with-meta name md) new-fn)
               (when debug?
                 (?? "Traced" func-var)))
-            (catch Exception e 
+            (catch Exception e
               (if debug?
                 (?? "Cannot trace" func-var e)
                 (throw e)))))))))
@@ -245,4 +245,3 @@
        (catch Throwable t (println "caught" t)))
      (await-for 1000 *traces*)
      @*traces*))
-

@@ -4,7 +4,7 @@
       [set :as set]
       [string :as s]])
   (:use
-    [clojure 
+    [clojure
       test
       [walk :only [prewalk]]])
   (:import (java.io LineNumberReader InputStreamReader PushbackReader)
@@ -14,7 +14,7 @@
   [& exprs]
   `(println " Debug:"
      ~@(mapcat
-         (fn [x] 
+         (fn [x]
            (if (string? x)
              `[~x]
              `['~x "=" (try ~x (catch Exception e# e#)) ","]) )
@@ -30,10 +30,10 @@
       (ns-resolve ns sym))
     (catch Exception e (?? sym e))))
 
-(defn macro? 
+(defn macro?
   "Test if a symbol refers to a macro"
   [sym ns]
-  (and 
+  (and
     (symbol? sym)
     (:macro (meta (safe-ns-resolve ns sym)))))
 
@@ -41,7 +41,7 @@
   "Return either [nil result] in normal case,
   or [exception nil] if an an exception was thrown."
   [expr]
-  `(try [nil ~expr] 
+  `(try [nil ~expr]
     (catch Throwable t# [t# nil])))
 
 (defn repeat-str [n str]
@@ -97,7 +97,7 @@
     distinct
     (filter symbol?)
     (remove
-      #(or 
+      #(or
          (special-symbol? %)
          (macro? % ns)
          (var? %)))
@@ -110,7 +110,7 @@
   [func]
   (when-let [func-var (cond
                          (var? func)
-                           func 
+                           func
                          (symbol? func)
                            (resolve func)
                          (class? func)

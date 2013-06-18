@@ -13,7 +13,7 @@
   [form expected]
   (let [got (apply concat
               (maps-to-lol
-                (remove #(find % :result) 
+                (remove #(find % :result)
                   (make-steps form))
                 [:path :form]))]
     (is (not (first-diff got expected)))))
@@ -69,4 +69,3 @@
         [1 1 1] 2
         [1 1 2] 0
         [2 3] -1])))
-

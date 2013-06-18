@@ -10,16 +10,16 @@
       test]
     [lambdebug utils]))
 
-(def *trace-index* (agent 0))
+(def ^:dynamic *trace-index* (agent 0))
 
 ; bright inverse yellow
-(def *left-marker* (str
+(def ^:dynamic *left-marker* (str
   \u001b "[1m"
   ;\u001b "[7m"
   \u001b "[33m"
   "<<< "))
 
-(def *right-marker* (str " >>>" \u001b "[0m"))
+(def ^:dynamic *right-marker* (str " >>>" \u001b "[0m"))
 
 
 (with-test
@@ -82,7 +82,7 @@
       :else
         coll))
   (are
-    [coll n _ result] 
+    [coll n _ result]
     (is (= (edit-at coll n str) result))
     [:a 42 :b] 1    :>> [:a "42" :b]
     '(:a 42 :b) 1   :>> '(:a "42" :b)
@@ -110,10 +110,10 @@
         (f coll))))
   (is (= (edit-path [1 2 3] [] str)
          "[1 2 3]"))
-  (is (= (edit-path 
+  (is (= (edit-path
             [:a {:b 42} :c] [1 0] str)
             [:a {":b" 42} :c]))
-  (is (= (edit-path 
+  (is (= (edit-path
             [:a {:b 42} :c] [1] str)
             [:a "{:b 42}" :c]))
   (is (= (edit-path [:a :b] [99] str)
@@ -154,7 +154,7 @@
   [traces index]
   (let [traces (drop index traces)
         level (:level (first traces))]
-    (+ 1 index (count (take-while #(< level (:level %)) 
+    (+ 1 index (count (take-while #(< level (:level %))
                          (next traces))))))
 
 (defn step-prev
@@ -183,8 +183,8 @@
   [& _]
   (println "Help: choose
     step (i)n, (n)ext, (b)ack, (p)rev, (o)ut"))
-    
-(def *COMMANDS*
+
+(def ^:dynamic *COMMANDS*
   {"i" step-in
    "n" step-next
    "b" step-back
